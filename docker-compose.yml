@@ -22,7 +22,7 @@ services:
     container_name: db
     environment: 
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: free_market_development
+      MYSQL_DATABASE: present_graveyard_market_development
       TZ: 'Asia/Tokyo' 
     command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     volumes:  

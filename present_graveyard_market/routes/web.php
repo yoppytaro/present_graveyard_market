@@ -12,9 +12,14 @@
 */
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
+// トップ
+Route::get('/', 'ItemController@index')->name('top')->middleware('auth');
+
+// ユーザー
+Route::resource('user', 'UserController')->except('index', 'create', 'store')->middleware('auth');
+
+//　認証
 Auth::routes();

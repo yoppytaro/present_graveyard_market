@@ -5,7 +5,7 @@
         </li>
         @if (Auth::check())
             <li>
-                <a href="#">お気に入り一覧a</a>
+                <a href="#">お気に入り一覧</a>
             </li>
             <li>
                 <a href="#">出品一覧</a>

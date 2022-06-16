@@ -26,5 +26,10 @@
                 <input type="submit" value="更新">
             </div>
         </form>
+        <form action="{{ route('user.destroy', Auth::user()) }}" method="POST">
+            @csrf
+            @method('DELETE')
+            <input type="submit" value="削除">
+        </form>
     </div>
 @endsection

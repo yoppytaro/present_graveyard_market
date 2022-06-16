@@ -1,20 +1,31 @@
 <?php
 
 namespace App\Services;
+use Illuminate\Support\Facades\Storage;
 
 class UpImageServices
 {
-    print
-    public function UpImage($image, )
+    public function __construct()
     {
-        // ファイル保存
-        $path = $image->store('storage');
-
-        dd($path);
+        $this->path = '';
     }
 
-    public function deleteImage() 
+    public function UpImage($image, $beforImage)
     {
-        
+        // ファイル保存
+        if (isset($image)) {
+            $this->path = $image->store('public');
+            $this->deleteImage($beforImage);
+        } else {
+            $this->path = $beforImage;
+        }
+
+        return $this->path;
+    }
+
+    // 顔図を削除
+    public function deleteImage($beforImage) 
+    {
+        Storage::delete($beforImage);
     }
 }

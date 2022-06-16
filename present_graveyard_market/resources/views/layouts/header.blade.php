@@ -3,12 +3,15 @@
         <li>
             <a href="{{ route('top') }}">{{ config('app.name') }}</a>
         </li>
-        @if (Auth::check())
+        @auth
             <li>
                 <a href="#">お気に入り一覧</a>
             </li>
             <li>
-                <a href="#">出品一覧</a>
+                <a href="{{ route('user.show', Auth::user()) }}">プロフィール</a>
+            </li>
+            <li>
+                <a href="{{ route('item.create') }}">新規出品</a>
             </li>
             <li>
                 <form action="{{ route('logout') }}" method="POST">
@@ -16,14 +19,15 @@
                     <input type="submit" value="ログアウト">
                 </form>
             </li>
-        @else
+        @endauth
+        @guest
             <li>
                 <a href="{{ route('login') }}">ログイン</a>
             </li>
             <li>
                 <a href="{{ route('register') }}">サインイン</a>
             </li>
-        @endif
+        @endguest
     </ul>
 </header>
 

@@ -13,7 +13,7 @@
         </div>
         <div>
             <div>
-                <img src="{{ $user->image ? Storage::url($user->image) : asset('images/no_image.png') }}">
+                <img src="{{ $user->image ? Storage::url($user->image) : asset('images/no_image.png') }}" style="height: 100px" >
             </div>
             <div>
                 名前：{{ $user->name }}
@@ -23,5 +23,11 @@
             </div>
         </div>
         <a href="{{ route('user.edit', Auth::user()) }}">編集</a>
+        <a href="{{ route('orders')}}">購入した商品</a>
+        <hr>
+        <div>
+            <p>出品した商品</p>
+            @include('layouts.item_list')
+        </div>
     </div>
 @endsection

@@ -11,6 +11,8 @@
         <div>
             <h1>{{ $title }}</h1>
         </div>
-        @include('layouts.item_list')
+        <div>
+            @include('layouts.item_list')
+        </div>
     </div>
 @endsection

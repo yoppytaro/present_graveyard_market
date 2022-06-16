@@ -12,12 +12,20 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
+
+    // アクセス制限
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     // ユーザー詳細
     public function show(User $user)
     {
         return view('users.show', [
             'title' => "{$user->name}さんのプロフィール",
-            'user' => $user
+            'user' => $user,
+            'items' => $user->items
         ]);
     }
 
@@ -46,5 +54,14 @@ class UserController extends Controller
         Auth::logout();
         $user->delete();
         return redirect()->route('top');
+    }
+
+    // 購入した商品一覧
+    public function orders()
+    {
+        return view('users.orders', [
+            'title' => '購入した商品',
+            'items' => Auth::user()->orders
+        ]);
     }
 }

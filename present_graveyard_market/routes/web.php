@@ -21,5 +21,19 @@ Route::get('/', 'ItemController@index')->name('top')->middleware('auth');
 // ユーザー
 Route::resource('user', 'UserController')->except('index', 'create', 'store')->middleware('auth');
 
-//　認証
+
+// アイテム
+Route::resource('item', 'ItemController')->middleware('auth');
+
+// 購入
+Route::get('item/{item}/confirmation', 'OrderController@show')->name('order.confirmation')->middleware('auth');
+Route::post('item/{item}', 'OrderController@store')->name('order.store')->middleware('auth');
+Route::get('item/{item}/thank', 'OrderController@thank')->name('order.thank')->middleware('auth');
+
+Route::get('orders', 'UserController@orders')->name('orders')->middleware('auth');
+
+//認証
 Auth::routes();
+
+//お気に入り
+Route::post('isLIke', 'ItemController@isLIke')->name('isLike')->middleware('auth');

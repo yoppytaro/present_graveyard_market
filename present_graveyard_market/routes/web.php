@@ -35,5 +35,6 @@ Route::get('orders', 'UserController@orders')->name('orders')->middleware('auth'
 //認証
 Auth::routes();
 
-//お気に入り
-Route::post('isLIke', 'ItemController@isLIke')->name('isLike')->middleware('auth');
+// お気に入り
+Route::get('likes', 'LikeController@index')->name('likes')->middleware('auth');
+Route::post('likes', 'LikeController@isLike')->name('likes')->middleware('auth');

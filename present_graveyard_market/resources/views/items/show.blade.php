@@ -27,7 +27,7 @@
         <div>
             <a href="{{ route('item.edit', $item) }}">編集</a>
         </div>
-        <button>{{ Auth::user()->isLike ? ★ : ☆ }}</button>
+        <button class="like" data-id={{$item->id}}>{{ $item->isLiked() ? '★' : '☆' }}</button>
     </div>
 @endsection
 

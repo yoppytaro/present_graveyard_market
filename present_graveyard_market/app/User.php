@@ -26,12 +26,14 @@ class User extends Authenticatable
         return $this->hasMany('App\Item');
     }
 
+    // 購入したアイテムを返す
     public function orders()
     {
         return $this->belongsToMany('App\Item', 'orders');
     }
 
-    public function likes()
+    // お気に入りしているアイムを返す
+    public function likeItems()
     {
         return $this->belongsToMany('App\Item', 'likes');
     }

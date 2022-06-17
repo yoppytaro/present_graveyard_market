@@ -83,12 +83,4 @@ class ItemController extends Controller
         $item->delete();
         return redirect()->route('top');
     }
-
-    public function isLIke(Item $item)
-    {
-        // いいね済み
-        if ($item->isLIke) {
-            
-        }
-    }
 }

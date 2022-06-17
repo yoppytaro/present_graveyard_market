@@ -5,7 +5,7 @@
         </li>
         @auth
             <li>
-                <a href="#">お気に入り一覧</a>
+                <a href="{{ route('likes') }}">お気に入り一覧</a>
             </li>
             <li>
                 <a href="{{ route('user.show', Auth::user()) }}">プロフィール</a>

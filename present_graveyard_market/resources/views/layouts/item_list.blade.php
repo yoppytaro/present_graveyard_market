@@ -1,4 +1,4 @@
-<div>
+<div class="items">
     @forelse($items as $item)
         <div>
             名前：{{ $item->name }}

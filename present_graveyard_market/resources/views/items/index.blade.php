@@ -11,6 +11,15 @@
         <div>
             <h1>{{ $title }}</h1>
         </div>
+        <div>
+            <input type="text" id="serch_name">
+            <select name="category" id="category">
+                @foreach (\App\Category::all() as $category)
+                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                @endforeach
+            </select>
+            <button id="serch">検索</button>
+        </div>
         @include('layouts.item_list')
     </div>
 @endsection

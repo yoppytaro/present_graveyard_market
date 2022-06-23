@@ -39,3 +39,8 @@ Auth::routes();
 // お気に入り
 Route::get('likes', 'LikeController@index')->name('likes')->middleware('auth');
 Route::post('likes', 'LikeController@isLike')->name('likes')->middleware('auth');
+
+
+// 検索
+Route::get('search', 'SearchController@search')->name('search');
+// Route::post('search', 'SearchController@search')->name('search');

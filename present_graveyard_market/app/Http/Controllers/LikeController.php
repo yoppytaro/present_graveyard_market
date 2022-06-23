@@ -31,13 +31,13 @@ class LikeController extends Controller
 
         if ($liked_id !== null) {
             Like::find($liked_id)->first()->delete();
-            return 'delete';
         } else {
             Like::create([
                 'user_id' => Auth::user()->id,
                 'item_id' => $item_id,
             ]);
-            return 'create';
         }
+
+        return response()->json(true);
     }
 }

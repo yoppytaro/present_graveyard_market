@@ -8,6 +8,8 @@
 
     {{-- css --}}
     {{-- <link rel="stylesheet" href="{{ asset('css/reset.css') }}"> --}}
+    <!-- Font Awesome -->
+    <link href="https://use.fontawesome.com/releases/v5.15.3/css/all.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
 
     {{-- JS --}}

@@ -15,7 +15,7 @@
             名前：{{ $item->name }}
             説明：{{ $item->description }}
             価格：{{ $item->price }}
-            カテゴリー：{{ $item->category->name }}
+            カテゴリー：{{ $item->category }}
             {{-- イメージは必須にしていいる --}}
             <a href="{{ route('item.show', $item) }}">
                 <img src="{{ Storage::url($item->image) }}" style="height: 100px" >
@@ -27,7 +27,7 @@
         <div>
             <a href="{{ route('item.edit', $item) }}">編集</a>
         </div>
-        <button class="like" data-id={{$item->id}}>{{ $item->isLiked() ? '★' : '☆' }}</button>
+        @include('layouts.like_button')
     </div>
 @endsection
 

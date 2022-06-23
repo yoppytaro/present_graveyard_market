@@ -15,7 +15,7 @@
             名前：{{ $item->name }}
             説明：{{ $item->description }}
             価格：{{ $item->price }}
-            カテゴリー：{{ $item->category->name }}
+            カテゴリー：{{ $item->category }}
             {{-- イメージは必須にしていいる --}}
             <a href="{{ route('item.show', $item) }}">
                 <img src="{{ Storage::url($item->image) }}" style="height: 100px" >

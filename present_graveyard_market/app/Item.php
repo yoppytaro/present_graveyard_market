@@ -3,7 +3,6 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
 
 class Item extends Model
 {
@@ -12,26 +11,29 @@ class Item extends Model
         'user_id', 'name', 'price', 'description', 'image', 'category_id'
     ];
 
-    public function category()
+    public function scopeWhereItem($query, $user_id, $item_id)
     {
-        return $this->belongsTo('App\Category');
+        if ($user_id and $item_id) {
+            return $query->where('items.id', '=', $item_id)
+            ->where('items.user_id', '=', $user_id);
+        } else if($user_id) {
+            return $query->where('items.user_id', '=', $user_id);
+        }
+        return $query->where('items.id', '=', $item_id);
     }
 
-    // Likeリレーション設定
-    public function likes()
+    public function scopeJoinCategory($query)
     {
-        return $this->hasMany('App\Like');
+        return $query->leftJoin('categories', 'categories.id', '=', 'items.category_id')
+        ->select('items.*','likes.id as isLikeBy', 'categories.name as category');
     }
 
-    // お気に入りしているユーザーを返す
-    public function likedUsers()
-    {
-        return $this->belongsToMany('App\User', 'likes');
-    }
-
-    // アイテムをお気に入りしているか結果を返す
-    public function isLiked()
-    {
-        return $this->likedUsers->pluck('id')->contains(Auth::user()->id);
+    public function scopeIsLIkeBy($query, $user_id)
+    {   
+        return  $query->leftjoin('likes', function ($join) use($user_id) {
+            $join->on('likes.item_id', '=', 'items.id')
+            ->where('likes.user_id', '=', $user_id);
+        });
     }
 }
+

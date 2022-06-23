@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Http\Requests\UserRequest;
 
 use App\User;
+use App\Item;
 use App\Services\UpImageServices;
+use App\Services\UserServices;
+
 
 use Illuminate\Support\Facades\Auth;
 
@@ -25,7 +27,7 @@ class UserController extends Controller
         return view('users.show', [
             'title' => "{$user->name}さんのプロフィール",
             'user' => $user,
-            'items' => $user->items
+            'items' => Item::WhereItem($user->id, null)->JoinCategory()->IsLIkeBy($user->id)->get()
         ]);
     }
 
@@ -38,21 +40,19 @@ class UserController extends Controller
     }
 
     // プロフィール更新
-    public function update(UserRequest $request,UpImageServices $UpImage, User $user)
+    public function update(User $user,UserRequest $request,UpImageServices $UpImage, UserServices $UserUpdate)
     {
-        $user->update([
-            'name' => $request->name,
-            'profile' => $request->profile,
-            'image' => $UpImage->UpImage($request->image, $user->image)
-        ]);
+        $path = $UpImage->UpImage($request->image, $user->image);
+        $UserUpdate->update($user, $request, $path);
+        session()->flash('success', 'プロフィールを更新しました');
         return redirect()->route('user.show', $user);
     }
 
     // ユーザー削除
-    public function destroy(User $user)
+    public function destroy(User $user,  UserServices $UserUpdate)
     {
         Auth::logout();
-        $user->delete();
+        $UserUpdate->update($user, null, null);
         return redirect()->route('top');
     }
 

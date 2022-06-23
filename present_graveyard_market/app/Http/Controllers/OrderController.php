@@ -20,7 +20,7 @@ class OrderController extends Controller
     {
         return view('orders.show', [
             'title' => '購入確認画面',
-            'item' => $item
+            'item' => $item->WhereItem(null, $item->id)->JoinCategory()->first()
         ]);
     }
 
@@ -39,7 +39,7 @@ class OrderController extends Controller
     {
         return view('orders.thank', [
             'title' => '商品を購入しました！！',
-            'item' => $item
+            'item' => $item->WhereItem(null, $item->id)->JoinCategory()->first()
         ]);
 
     }

@@ -1,0 +1,1 @@
+<i data-item_id={{$item->id}} data-liked_id='{{$item->isLikeBy}}' class="like_action fas fa-thumbs-up {{ $item->isLikeBy !== null ? 'liked' : ''}}" ></i>

@@ -20,20 +20,24 @@ class LikeController extends Controller
     {
         return view('likes.index', [
             'title' => 'お気に入り一覧',
-            'items' => Auth::user()->likeItems
+            'items' => Like::likeLIst(Auth::user()->id)
         ]);
     }
 
     public function isLike(Request $request)
     {
-        $item = Item::find($request->id);
-        if ($item->isLiked(Auth::user()->id)) {
-            $item->likes->where('user_id', Auth::user()->id)->first()->delete();
+        $item_id = $request->item_id;
+        $liked_id = $request->liked_id;
+
+        if ($liked_id !== null) {
+            Like::find($liked_id)->first()->delete();
+            return 'delete';
         } else {
             Like::create([
                 'user_id' => Auth::user()->id,
-                'item_id' => $item->id,
+                'item_id' => $item_id,
             ]);
+            return 'create';
         }
     }
 }

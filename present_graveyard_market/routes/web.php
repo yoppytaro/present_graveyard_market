@@ -25,6 +25,7 @@ Route::resource('user', 'UserController')->except('index', 'create', 'store')->m
 // アイテム
 Route::resource('item', 'ItemController')->middleware('auth');
 
+
 // 購入
 Route::get('item/{item}/confirmation', 'OrderController@show')->name('order.confirmation')->middleware('auth');
 Route::post('item/{item}', 'OrderController@store')->name('order.store')->middleware('auth');

@@ -14,6 +14,7 @@
         <div>
             <input type="text" id="serch_name">
             <select name="category" id="category">
+                <option value="0">選択なし</option>
                 @foreach (\App\Category::all() as $category)
                     <option value="{{ $category->id }}">{{ $category->name }}</option>
                 @endforeach

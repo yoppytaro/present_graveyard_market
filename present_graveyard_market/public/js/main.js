@@ -1,5 +1,21 @@
 /* global $ */
 $(function() {
+    $(document).ready(function() {
+        paginathing()
+    })
+
+    function paginathing () {
+        $('.pagination-container').remove();
+        $('.items').paginathing({
+            perPage: 10,
+            prevText:'<i class="fas fa-angle-left"></i>',
+            nextText:'<i class="fas fa-angle-right"></i>',
+            activeClass: 'navi-active',
+            firstText: '<i class="fas fa-angle-double-left"></i>', 
+            lastText: '<i class="fas fa-angle-double-right"></i>', 
+        })
+    }
+
     $('.like_action').on('click',async function() {
         let item_id = $(this).data('item_id');
         let liked_id = $(this).data('liked_id');
@@ -22,21 +38,26 @@ $(function() {
     })
 
     $('#serch').on('click',async function() {
+        $('.error').remove();
+        $('.success').remove();
+
         item_name = $('#serch_name').val()
-        category = $('#category').val()
+        category = Number($('#category').val())
 
         data = {
-            'item_name' : $('#serch_name').val(),
-            'category' : $('#category').val()
+            'item_name' : item_name,
         }
 
-        result = await ajaxSend(data, 'post', `/search/`);
-        resultJson = JSON.parse(result[1])
+        if (category !== 0) {
+            data['category'] = category
+        }
+
+        result = await ajaxSend(data, 'POST', `/search/`);
         if (!result[0]) {
-            return    
+            flashMessage('error', result[1])
+            return
         }
-
-        console.log();
+        resultJson = JSON.parse(result[1])
 
         $('.items').empty();
 
@@ -44,17 +65,16 @@ $(function() {
             $('.items').append('<h3>データなし！！</h3>')
             return
         }
-        console.log(resultJson);
 
         resultJson.forEach(item  => {
             appendHtml = `
-            <div>
+            <div class='item'>
                 名前：${ item.name }
                 説明：${ item.description }
                 価格：${ item.price }
                 カテゴリー：${ item.category }
                 <a href="/item/${item.id}">
-                    <img src="/storage/${item.image.match(/([^/]*)\./)[1]}" style="height: 100px" >
+                    <img src="/storage/${item.image.split('/')[1]}" style="height: 100px" >
                 </a>
                 <i data-item_id=${item.id} data-liked_id='${item.isLikeBy}' class="like_action fas fa-thumbs-up { $item->isLikeBy !== null ? 'liked' : ''}}" ></i>
             </div>
@@ -62,9 +82,23 @@ $(function() {
             $('.items').append(appendHtml)
         });
 
+        paginathing()
+
         return
         
     })
+
+    function flashMessage(messageType, messages) {
+        if (messageType === 'success') {
+            for(let message of messages) {
+                $('.wrapper').prepend(`<div class='success'>${message}</div>`)
+            }
+            return
+        }
+        for(let message of messages) {
+            $('.wrapper').prepend(`<div class='error'>${message}</div>`)
+        }
+    }
 
     function ajaxSend(data, methodType, url) {
         return new Promise((resolve) => {
@@ -83,7 +117,12 @@ $(function() {
                 console.log(jqXHR.status);
                 // エラー情報
                 console.log(textStatus);
-                resolve([false,jqXHR.status]);
+                errors = []
+                for(let key in jqXHR.responseJSON.errors) {
+                    let responseError = jqXHR.responseJSON.errors[key];
+                    errors.push(responseError[0])
+                }
+                resolve([false,errors]);
             });
         });
     }

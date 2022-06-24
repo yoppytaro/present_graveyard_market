@@ -1,8 +1,7 @@
 <div class="items">
     @forelse($items as $item)
-        <div>
+        <div class="item">
             名前：{{ $item->name }}
-            説明：{{ $item->description }}
             価格：{{ $item->price }}
             カテゴリー：{{ $item->category }}
             {{-- イメージは必須にしていいる --}}

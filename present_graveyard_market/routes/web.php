@@ -23,7 +23,7 @@ Route::resource('user', 'UserController')->except('index', 'create', 'store')->m
 
 
 // アイテム
-Route::resource('item', 'ItemController')->middleware('auth');
+Route::resource('item', 'ItemController')->except('index')->middleware('auth');
 
 
 // 購入
@@ -42,4 +42,5 @@ Route::post('likes', 'LikeController@isLike')->name('likes')->middleware('auth')
 
 
 // 検索
+// Route::get('search', 'SearchController@search')->name('search');
 Route::post('search', 'SearchController@search')->name('search');

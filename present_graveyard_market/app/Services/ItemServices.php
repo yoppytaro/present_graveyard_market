@@ -1,12 +1,23 @@
 <?php
 namespace App\Services;
+
 use Illuminate\Support\Facades\Auth;
 use App\Item;
+use App\Services\UpImageServices;
 
 class ItemServices
 {
-    public function update($item, $request, $path)
+    public function __construct()
     {
+        $this->upImageServices = new UpImageServices;
+    }
+
+    // 商品登録 or 商品削除
+    public function upsert($item, $request)
+    {
+        $path = $this->upImageServices
+            ->upImage($request->image, $item->image);
+
         $data = [
             'user_id' => Auth::user()->id,
             'name' => $request->name,
@@ -16,15 +27,15 @@ class ItemServices
             'image' => $path,
         ];
 
-        if ($item and $request) {
-            $item->update($data);
-            return;
-        } else if ($request) {
-            Item::create($data);
-            return;
-        }
+        Item::updateOrInsert(
+            ['id' => $item->id],
+            $data
+        );
+    }
 
+    // 商品削除
+    public function delete($item)
+    {
         $item->delete();
-        return;
     }
 }

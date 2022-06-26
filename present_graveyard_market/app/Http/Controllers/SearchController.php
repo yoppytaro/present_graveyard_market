@@ -19,8 +19,11 @@ class SearchController extends Controller
             $result = $result->where('items.category_id', '=', $category);
         }
 
-        $result = $result->JoinCategory()->IsLikeBy(Auth::user()->id)->get()->toJson(JSON_PRETTY_PRINT);
-
+        $result = $result->JoinCategory()
+            ->IsLikeBy(Auth::user()->id)
+            ->orderBy('items.id', 'desc')
+            ->get()
+            ->toJson(JSON_PRETTY_PRINT);
         return response()->json($result);
     }
 }

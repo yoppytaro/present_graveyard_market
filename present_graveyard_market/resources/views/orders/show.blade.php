@@ -17,12 +17,12 @@
             価格：{{ $item->price }}
             カテゴリー：{{ $item->category }}
             {{-- イメージは必須にしていいる --}}
-            <a href="{{ route('item.show', $item) }}">
+            <a href="{{ route('item.show', $item->id) }}">
                 <img src="{{ Storage::url($item->image) }}" style="height: 100px" >
             </a>
         </div>
         <div>
-            <form action="{{ route('order.store', $item) }}" method="POST">
+            <form action="{{ route('order.store', $item->id) }}" method="POST">
                 @csrf
                 <input type="submit" value="確定">
             </form>

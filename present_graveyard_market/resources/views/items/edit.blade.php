@@ -40,7 +40,7 @@
                 <input type="submit" value="登録">
             </div>
         </form>
-        <form action="{{ route('item.destroy', $item) }}" method="POST">
+        <form action="{{ route('item.destroy', $item->id) }}" method="POST">
             @csrf
             @method('DELETE')
             <input type="submit" value="削除">

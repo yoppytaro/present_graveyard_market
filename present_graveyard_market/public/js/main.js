@@ -16,24 +16,34 @@ $(function() {
         })
     }
 
-    $('.like_action').on('click',async function() {
+
+    // お気に入り
+    $(document).on('click', '.like_action', async function() {
+        $('.error').remove();
+        $('.success').remove();
         let item_id = $(this).data('item_id');
-        let liked_id = $(this).data('liked_id');
 
         data = {
-            'item_id': item_id,
-            'liked_id': liked_id
+            'item_id': item_id
         };
 
         result = await ajaxSend(data, 'POST', '/likes');
         
+        // エラー処理
         if (!result[0]) {
+            flashMessage('error', result[1])
             return
         }
         
-        $(this).toggleClass('liked');
+        resultJson = JSON.parse(result[1])
 
-        return
+        if (resultJson) {
+            $(this).addClass('liked');
+            return;
+        }
+
+        $(this).removeClass('liked');
+        return;
         
     })
 
@@ -66,19 +76,19 @@ $(function() {
             return
         }
 
-        resultJson.forEach(item  => {
+        resultJson.forEach(item => {
             appendHtml = `
             <div class='item'>
                 名前：${ item.name }
-                説明：${ item.description }
                 価格：${ item.price }
                 カテゴリー：${ item.category }
                 <a href="/item/${item.id}">
                     <img src="/storage/${item.image.split('/')[1]}" style="height: 100px" >
                 </a>
-                <i data-item_id=${item.id} data-liked_id='${item.isLikeBy}' class="like_action fas fa-thumbs-up { $item->isLikeBy !== null ? 'liked' : ''}}" ></i>
+                <i data-item_id=${item.id} class="like_action fas fa-thumbs-up ${item.isLikeBy ? 'liked': ''}"></i>
             </div>
             `
+
             $('.items').append(appendHtml)
         });
 

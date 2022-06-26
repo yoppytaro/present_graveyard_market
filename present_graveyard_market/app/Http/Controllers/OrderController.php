@@ -3,44 +3,45 @@
 namespace App\Http\Controllers;
 
 use App\Item;
-use App\Order;
-use Illuminate\Support\Facades\Auth;
+use App\Services\OrderServices;
 
 class OrderController extends Controller
 {
-
     // アクセス制限
     public function __construct()
     {
         $this->middleware('auth');
+        $this->orderServices = new OrderServices;
     }
 
 
     public function show(Item $item)
     {
-        return view('orders.show', [
-            'title' => '購入確認画面',
-            'item' => $item->WhereItem(null, $item->id)->JoinCategory()->first()
-        ]);
+        $title = '購入確認画面';
+        $item = $item->WhereItem(null, $item->id)
+            ->JoinCategory()
+            ->first();
+
+        return view('orders.show', compact('title', 'item'));
     }
 
 
     public function store(Item $item)
     {
-        Order::create([
-            'user_id' => Auth::user()->id,
-            'item_id' => $item->id,
-        ]);
+        $this->orderServices
+            ->create($item->id);
 
         return redirect()->route('order.thank', $item);
     }
 
     public function thank(Item $item)
     {
-        return view('orders.thank', [
-            'title' => '商品を購入しました！！',
-            'item' => $item->WhereItem(null, $item->id)->JoinCategory()->first()
-        ]);
+        $title = '商品を購入しました！！';
+        $item = $item->WhereItem(null, $item->id)
+            ->JoinCategory()
+            ->first();
+
+        return view('orders.thank', compact('title', 'item'));
 
     }
 }

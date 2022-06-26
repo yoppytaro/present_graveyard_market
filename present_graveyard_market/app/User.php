@@ -25,27 +25,28 @@ class User extends Authenticatable
     public function items()
     {
         return $this->hasMany('App\Item')
-        ->joinCategory()->orderBy('items.id', 'desc');
+            ->joinCategory()
+            ->orderBy('items.id', 'desc');
     }
 
     // 購入したアイテムを返す
     public function orders()
     {
         return $this->belongsToMany('App\Item', 'orders')
-        ->joinCategory();
+            ->joinCategory();
     }
 
     // カテゴリー取得
     public function joinCategory()
     {
         $this->join('categories', 'categories.id', '=', 'items.category_id')
-        ->select('items.*', 'categories.name as category');
+            ->select('items.*', 'categories.name as category');
     }
 
     public function IsLIkeBy($query, $user_id)
     {
         return $query->leftJoin('likes', 'items.id', '=', 'likes.item_id')
-        ->selectRaw("(case when likes.user_id = $user_id and likes.item_id = items.id then likes.id else null end) as isLikeBy");
+            ->selectRaw("(case when likes.user_id = $user_id and likes.item_id = items.id then likes.id else null end) as isLikeBy");
     }    
 
     // お気に入りしているアイムを返す

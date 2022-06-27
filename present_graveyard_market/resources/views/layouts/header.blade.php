@@ -1,5 +1,5 @@
-<header>
-    <ul>
+<header class="header_wrapper">
+    <ul class="header_nav">
         <li>
             <a href="{{ route('top') }}">{{ config('app.name') }}</a>
         </li>

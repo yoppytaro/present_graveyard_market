@@ -17,7 +17,7 @@ $factory->define(Item::class, function (Faker $faker) {
     return [
         'user_id' => $set_user_id,
         'category_id' => $set_category_id,
-        'name' => $faker->realText($maxNbChars = 20),
+        'name' => $faker->word(),
         'description' => $faker->realText($maxNbChars = 50, $indexSize = 2),
         'price' => $faker->numberBetween($min = 100, $max = 50000),
         'image' => $path,

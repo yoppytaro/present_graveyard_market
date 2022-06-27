@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y \
     libfreetype6-dev \
     libjpeg62-turbo-dev \
     vim \
+    nodejs npm \
   && docker-php-ext-install zip pdo_mysql opcache
 RUN docker-php-ext-configure gd \
   -with-freetype=/usr/include/ \

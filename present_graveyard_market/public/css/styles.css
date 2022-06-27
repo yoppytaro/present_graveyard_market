@@ -23,10 +23,6 @@ body {
 	background: var(--white-color);    
 }
 
-header {
-    
-}
-
 /* 共通クラス
 ------------------------------- */
 .wrapper {
@@ -34,10 +30,55 @@ header {
     margin: 0 auto;
 }
 
+
 #like {
     cursor: pointer;
 }
 
 .liked {
     color: yellow;
+}
+
+.success {
+    color: green;
+}
+
+.errors {
+    color: red;
+}
+
+/* header
+------------------------------- */
+.header_wrapper {
+    width: var(--wrapper-width);
+    margin: 0 auto;
+}
+
+.header_nav {
+    padding: 5px 0px;
+    display: flex;
+    gap: 30px;
+    justify-content: start;
+    margin-bottom: 30px;
+}
+
+/* item
+------------------------------- */
+.items {
+    margin-bottom: 50px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.item {
+    width: 20%;
+}
+
+.item_img {
+    height: 50%;
+}
+
+.item_name {
+    height: 20%;
 }

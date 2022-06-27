@@ -15,6 +15,7 @@ class ItemServices
     // 商品登録 or 商品削除
     public function upsert($item, $request)
     {
+        dd($request->all());
         $path = $this->upImageServices
             ->upImage($request->image, $item->image);
 

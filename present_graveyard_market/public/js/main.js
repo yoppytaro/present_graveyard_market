@@ -1,33 +1,21 @@
 /* global $ */
 $(function() {
+    /* ページを読み込んだ際にページネーションを実行 */
     $(document).ready(function() {
         paginathing()
     })
 
-    function paginathing () {
-        $('.pagination-container').remove();
-        $('.items').paginathing({
-            perPage: 10,
-            prevText:'<i class="fas fa-angle-left"></i>',
-            nextText:'<i class="fas fa-angle-right"></i>',
-            activeClass: 'navi-active',
-            firstText: '<i class="fas fa-angle-double-left"></i>', 
-            lastText: '<i class="fas fa-angle-double-right"></i>', 
-        })
-    }
-
-
-    // お気に入り
+    /* お気に入り */
     $(document).on('click', '.like_action', async function() {
-        $('.error').remove();
-        $('.success').remove();
-        let item_id = $(this).data('item_id');
+        $('.error').remove()
+        $('.success').remove()
+        let item_id = $(this).data('item_id')
 
         data = {
             'item_id': item_id
-        };
+        }
 
-        result = await ajaxSend(data, 'POST', '/likes');
+        result = await ajaxSend(data, 'POST', '/likes')
         
         // エラー処理
         if (!result[0]) {
@@ -37,19 +25,23 @@ $(function() {
         
         resultJson = JSON.parse(result[1])
 
+        // お気に入り登録
         if (resultJson) {
-            $(this).addClass('liked');
-            return;
+            $(this).addClass('liked')
+            flashMessage('success', ['お気に入りに登録しました'])
+            return
         }
 
-        $(this).removeClass('liked');
-        return;
-        
+        // お気に入り取り消し
+        $(this).removeClass('liked')
+        flashMessage('success', ['お気に入りを取り消しました'])
+        return
     })
 
+    /* 商品検索 */
     $('#serch').on('click',async function() {
-        $('.error').remove();
-        $('.success').remove();
+        $('.error').remove()
+        $('.success').remove()
 
         item_name = $('#serch_name').val()
         category = Number($('#category').val())
@@ -62,42 +54,60 @@ $(function() {
             data['category'] = category
         }
 
-        result = await ajaxSend(data, 'POST', `/search/`);
+        result = await ajaxSend(data, 'POST', `/search/`)
         if (!result[0]) {
             flashMessage('error', result[1])
             return
         }
         resultJson = JSON.parse(result[1])
 
-        $('.items').empty();
+        $('.items').empty()
 
+        // データなし
         if (!resultJson.length) {
             $('.items').append('<h3>データなし！！</h3>')
             return
         }
 
+        // 検索結果を一覧に表示
         resultJson.forEach(item => {
             appendHtml = `
             <div class='item'>
-                名前：${ item.name }
-                価格：${ item.price }
-                カテゴリー：${ item.category }
+                <div class="item_name">
+                    ${ item.name }
+                </div>
                 <a href="/item/${item.id}">
-                    <img src="/storage/${item.image.split('/')[1]}" style="height: 100px" >
+                    <img class="item_img" src="/storage/${item.image.split('/')[1]}">
                 </a>
                 <i data-item_id=${item.id} class="like_action fas fa-thumbs-up ${item.isLikeBy ? 'liked': ''}"></i>
             </div>
             `
-
             $('.items').append(appendHtml)
-        });
+        })
 
+        // ページネーション
         paginathing()
-
         return
-        
     })
 
+    /* 関数リスト
+    --------------------------------
+    */
+
+    /* ページネーション */
+    function paginathing () {
+        $('.pagination-container').remove()
+        $('.items').paginathing({
+            perPage: 10,
+            prevText:'<i class="fas fa-angle-left"></i>',
+            nextText:'<i class="fas fa-angle-right"></i>',
+            activeClass: 'navi-active',
+            firstText: '<i class="fas fa-angle-double-left"></i>', 
+            lastText: '<i class="fas fa-angle-double-right"></i>', 
+        })
+    } 
+
+    /* フラッシュメッセージ */
     function flashMessage(messageType, messages) {
         if (messageType === 'success') {
             for(let message of messages) {
@@ -110,6 +120,7 @@ $(function() {
         }
     }
 
+    /* リクエスト送信 */
     function ajaxSend(data, methodType, url) {
         return new Promise((resolve) => {
             $.ajax({
@@ -121,19 +132,19 @@ $(function() {
                 dataType: "json",
                 data: data,
             }).done((res)=>{
-                resolve([true,res]);
+                resolve([true,res])
             }).fail(function (jqXHR, textStatus) {
                 // httpステータス
-                console.log(jqXHR.status);
+                console.log(jqXHR.status)
                 // エラー情報
-                console.log(textStatus);
+                console.log(textStatus)
                 errors = []
                 for(let key in jqXHR.responseJSON.errors) {
-                    let responseError = jqXHR.responseJSON.errors[key];
+                    let responseError = jqXHR.responseJSON.errors[key]
                     errors.push(responseError[0])
                 }
-                resolve([false,errors]);
-            });
-        });
+                resolve([false,errors])
+            })
+        })
     }
-});
+})

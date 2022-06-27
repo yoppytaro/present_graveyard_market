@@ -1,12 +1,12 @@
 <div class="items">
     @forelse($items as $item)
         <div class="item">
-            名前：{{ $item->name }}
-            価格：{{ $item->price }}
-            カテゴリー：{{ $item->category }}
+            <div class="item_name">
+                {{ $item->name }}
+            </div>
             {{-- イメージは必須にしていいる --}}
             <a href="{{ route('item.show', $item->id) }}">
-                <img src="{{ Storage::url($item->image) }}" style="height: 100px" >
+                <img class="item_img" src="{{ Storage::url($item->image) }}">
             </a>
             @include('layouts.like_button')
         </div>

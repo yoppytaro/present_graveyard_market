@@ -7,7 +7,7 @@
 @endsection
 
 @section('main')
-    <div class="wrapper">
+    <div class="container">
         <form action="{{ route('user.update', Auth::user()) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')

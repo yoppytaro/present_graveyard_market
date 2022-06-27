@@ -5,7 +5,7 @@
 @endsection
 
 @section('main')
-    <div class="wrapper">
+    <div class="container">
         <form method="POST" action="{{ route('item.store', Auth::user()) }}" enctype="multipart/form-data">
             @csrf
             <div>

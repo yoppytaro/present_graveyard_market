@@ -5,7 +5,7 @@
 @endsection
 
 @section('main')
-    <div class="wrapper">
+    <div class="container">
         <form action="{{ route('login') }}" method="POST">
             @csrf
             <div>

@@ -7,7 +7,7 @@
 @endsection
 
 @section('main')
-    <div class="wrapper">
+    <div class="container">
         <div>
             <h1>{{ $title }}</h1>
         </div>

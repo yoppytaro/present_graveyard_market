@@ -2,49 +2,49 @@
 $(function() {
     /* ページを読み込んだ際にページネーションを実行 */
     $(document).ready(function() {
-        paginathing()
+        if ($('.item').length) {
+            paginathing();
+        }
     })
 
     /* お気に入り */
     $(document).on('click', '.like_action', async function() {
-        $('.error').remove()
-        $('.success').remove()
-        let item_id = $(this).data('item_id')
+        $('.flash_message').empty();
+        let item_id = $(this).data('item_id');
 
         data = {
             'item_id': item_id
         }
 
-        result = await ajaxSend(data, 'POST', '/likes')
+        result = await ajaxSend(data, 'POST', '/likes');
         
         // エラー処理
         if (!result[0]) {
-            flashMessage('error', result[1])
-            return
+            flashMessage('error', result[1]);
+            return;
         }
         
-        resultJson = JSON.parse(result[1])
+        resultJson = JSON.parse(result[1]);
 
         // お気に入り登録
         if (resultJson) {
-            $(this).addClass('liked')
-            flashMessage('success', ['お気に入りに登録しました'])
+            $(this).addClass('liked');
+            flashMessage('success', ['お気に入りに登録しました']);
             return
         }
 
         // お気に入り取り消し
-        $(this).removeClass('liked')
-        flashMessage('success', ['お気に入りを取り消しました'])
+        $(this).removeClass('liked');
+        flashMessage('success', ['お気に入りを取り消しました']);
         return
     })
 
     /* 商品検索 */
     $('#serch').on('click',async function() {
-        $('.error').remove()
-        $('.success').remove()
+        $('.flash_message').empty();
 
         item_name = $('#serch_name').val()
-        category = Number($('#category').val())
+        category = Number($('#category').val());
 
         data = {
             'item_name' : item_name,
@@ -54,39 +54,48 @@ $(function() {
             data['category'] = category
         }
 
-        result = await ajaxSend(data, 'POST', `/search/`)
+        result = await ajaxSend(data, 'POST', `/search/`);
+
         if (!result[0]) {
-            flashMessage('error', result[1])
+            flashMessage('error', result[1]);
             return
         }
-        resultJson = JSON.parse(result[1])
+        resultJson = JSON.parse(result[1]);
 
-        $('.items').empty()
+        $('.items').empty();
 
         // データなし
         if (!resultJson.length) {
-            $('.items').append('<h3>データなし！！</h3>')
+            $('.items').before(`
+                <h3 class="mt-5 mb-5 text-center">
+                    データなし！！
+                </h3>
+            `);
+            $('.pagination-container').remove();
             return
         }
 
         // 検索結果を一覧に表示
         resultJson.forEach(item => {
             appendHtml = `
-            <div class='item'>
-                <div class="item_name">
-                    ${ item.name }
+            <div class="p-2">
+                <div class='item card'>
+                    <a href="/item/${item.id}">
+                        <img class="card-img-top" src="/storage/${item.image.split('/')[1]}">
+                    </a>
+                    <div class="card-body">
+                        <h5 class="card-title">${ item.name }</h5>
+                        <p class="card-text">￥ ${ item.price }</p>
+                        <i data-item_id=${item.id} class="like_action fas fa-thumbs-up ${item.isLikeBy ? 'liked': ''}"></i>
+                    </div>
                 </div>
-                <a href="/item/${item.id}">
-                    <img class="item_img" src="/storage/${item.image.split('/')[1]}">
-                </a>
-                <i data-item_id=${item.id} class="like_action fas fa-thumbs-up ${item.isLikeBy ? 'liked': ''}"></i>
             </div>
-            `
-            $('.items').append(appendHtml)
+            `;
+            $('.items').append(appendHtml);
         })
 
         // ページネーション
-        paginathing()
+        paginathing();
         return
     })
 
@@ -96,7 +105,7 @@ $(function() {
 
     /* ページネーション */
     function paginathing () {
-        $('.pagination-container').remove()
+        $('.pagination-container').remove();
         $('.items').paginathing({
             perPage: 10,
             prevText:'<i class="fas fa-angle-left"></i>',
@@ -104,19 +113,19 @@ $(function() {
             activeClass: 'navi-active',
             firstText: '<i class="fas fa-angle-double-left"></i>', 
             lastText: '<i class="fas fa-angle-double-right"></i>', 
-        })
+        });
     } 
 
     /* フラッシュメッセージ */
     function flashMessage(messageType, messages) {
         if (messageType === 'success') {
             for(let message of messages) {
-                $('.wrapper').prepend(`<div class='success'>${message}</div>`)
+                $('.flash_message').append(`<div class='container text-success'>${message}</div>`);
             }
             return
         }
         for(let message of messages) {
-            $('.wrapper').prepend(`<div class='error'>${message}</div>`)
+            $('.flash_message').append(`<div class='container text-danger'>${message}</div>`);
         }
     }
 
@@ -144,7 +153,7 @@ $(function() {
                     errors.push(responseError[0])
                 }
                 resolve([false,errors])
-            })
+            });
         })
     }
 })

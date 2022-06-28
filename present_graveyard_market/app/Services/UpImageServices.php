@@ -5,21 +5,28 @@ use Illuminate\Support\Facades\Storage;
 
 class UpImageServices
 {
-    // 画像保存
-    public function upImage($image, $befor_image)
+    public function upImage($image, $item)
     {
-        if (isset($image)) {
-            $image_path = $image->store('public');
-            $this->deleteImage($befor_image);
-            return $image_path;
+        // 画像保存
+        $path = $this->storeImage($image);
+
+        // 前の画像を削除
+        if ($item) {
+            $this->deleteImage($item->image);
         }
-        
-        return $image_path = $befor_image;
+
+        return $path;
+    }
+
+    // 画像保存
+    protected function storeImage($image)
+    {
+        return $image->store('public');
     }
 
     // 画像削除
-    protected function deleteImage($befor_image) 
+    protected function deleteImage($image)
     {
-        Storage::delete($befor_image);
+        Storage::delete($image);
     }
 }

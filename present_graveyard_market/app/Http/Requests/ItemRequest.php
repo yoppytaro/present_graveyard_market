@@ -29,6 +29,7 @@ class ItemRequest extends FormRequest
             'price' => ['required', 'integer' , 'min:0'],
             'category' => ['required', 'exists:categories,id'],
             'image' => [
+                'required_with:id, null',
                 'image'
             ]
         ];

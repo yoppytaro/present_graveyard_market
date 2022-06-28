@@ -35,21 +35,17 @@ class ItemController extends Controller
     {
         $title = '商品登録';
         $categories = Category::all();
+        $item = new Item;
 
-        return view('items.create', compact('title', 'categories'));
+        return view('items.create', compact('title', 'categories', 'item'));
     }
 
     //　アイテム登録
     public function store(ItemRequest $request)
     {
-        // 新規登録の際は、imageは必須にする
-        $validate_rule = [
-            'image' => 'required'
-        ];
-        $this->validate($request, $validate_rule);
-
+        $item = new Item;
         $this->itemServices
-            ->upsert(null, $request);
+            ->upsert($item, $request);
 
         session()->flash('success', '商品登録しました');
 

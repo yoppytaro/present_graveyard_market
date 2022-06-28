@@ -85,7 +85,7 @@ $(function() {
                     </a>
                     <div class="card-body">
                         <h5 class="card-title">${ item.name }</h5>
-                        <p class="card-text">￥ ${ item.price }</p>
+                        <p class="card-text">￥${ item.price.toLocaleString() }</p>
                         <i data-item_id=${item.id} class="like_action fas fa-thumbs-up ${item.isLikeBy ? 'liked': ''}"></i>
                     </div>
                 </div>

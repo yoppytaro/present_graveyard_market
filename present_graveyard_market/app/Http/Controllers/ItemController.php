@@ -14,7 +14,6 @@ class ItemController extends Controller
     {
         // アクセス制限
         $this->middleware('auth');
-        $this->categories = Category::all();
         $this->itemServices = new ItemServices;
     }
 
@@ -26,7 +25,7 @@ class ItemController extends Controller
             ->isLikeBy(Auth::user()->id)
             ->orderBy('items.id', 'desc')
             ->get();
-        $categories = $this->categories;
+        $categories = Category::all();
 
         return view('items.index', compact('title', 'items', 'categories'));
     }
@@ -35,7 +34,7 @@ class ItemController extends Controller
     public function create()
     {
         $title = '商品登録';
-        $categories = $this->categories;
+        $categories = Category::all();
 
         return view('items.create', compact('title', 'categories'));
     }
@@ -73,7 +72,7 @@ class ItemController extends Controller
     public function edit(Item $item)
     {
         $title = '商品編集';
-        $categories = $this->categories;
+        $categories = Category::all();
 
         return view('items.edit', compact('title', 'item', 'categories'));
     }

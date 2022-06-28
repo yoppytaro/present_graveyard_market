@@ -25,12 +25,12 @@ Route::resource('user', 'UserController')->except('index', 'create', 'store')->m
 // アイテム
 Route::resource('item', 'ItemController')->except('index')->middleware('auth');
 
-
 // 購入
 Route::get('item/{item}/confirmation', 'OrderController@show')->name('order.confirmation')->middleware('auth');
 Route::post('item/{item}', 'OrderController@store')->name('order.store')->middleware('auth');
 Route::get('item/{item}/thank', 'OrderController@thank')->name('order.thank')->middleware('auth');
 
+// 購入した商品一覧
 Route::get('orders', 'UserController@orders')->name('orders')->middleware('auth');
 
 //認証
@@ -42,5 +42,4 @@ Route::post('likes', 'LikeController@isLike')->name('likes')->middleware('auth')
 
 
 // 検索
-// Route::get('search', 'SearchController@search')->name('search');
 Route::post('search', 'SearchController@search')->name('search');

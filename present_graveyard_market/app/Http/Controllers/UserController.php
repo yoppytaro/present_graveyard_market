@@ -65,8 +65,8 @@ class UserController extends Controller
     public function orders()
     {
         $title = '購入した商品';
-        $items = Auth::user()->order;
+        $items = Auth::user()->orders;
 
-        return view('users.edit', compact('title','items'));
+        return view('users.orders', compact('title','items'));
     }
 }

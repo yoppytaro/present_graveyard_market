@@ -25,7 +25,7 @@ class Item extends Model
     public function scopeJoinCategory($query)
     {
         return $query->leftJoin('categories', 'categories.id', '=', 'items.category_id')
-            ->select('items.*', 'categories.name as category', 'likes.id as isLikeBy');
+            ->select('items.*', 'categories.name as category');
     }
 
     public function scopeIsLIkeBy($query, $user_id)

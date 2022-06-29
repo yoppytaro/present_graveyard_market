@@ -6,15 +6,24 @@
 
 @section('main')
     <div class="container">
-        <form method="POST" action="{{ route('item.update', Auth::user()) }}" enctype="multipart/form-data">
+        <div>
+            <h1>{{ $title }}</h1>
+        </div>
+        <form method="POST" action="{{ route('item.update', $item->id) }}" enctype="multipart/form-data">
             @csrf
             @method('PUT')
-            @include('layouts.item_form')
+            <input name="id" type="hidden" value="{{ $item->id }}">
+            @include('layouts.item_form', ['bt_value' => '更新'])
         </form>
+        <div class="text-center">
+            <p>or</p>
+        </div>
         <form action="{{ route('item.destroy', $item->id) }}" method="POST">
             @csrf
             @method('DELETE')
-            <input type="submit" value="削除">
+            <div class="p-3">
+                @component('components.button_secondary')削除@endcomponent
+            </div>
         </form>
     </div>
 @endsection

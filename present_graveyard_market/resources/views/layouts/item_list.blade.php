@@ -2,11 +2,9 @@
     @forelse($items as $item)
     <div class="p-2">
         <div class="item card">
-            <a href="{{ route('item.show', $item->id) }}">
+            <a class="text-decoration-none" href="{{ route('item.show', $item->id) }}">
                 <img class="card-img-top" src="{{ Storage::url($item->image) }}">
             </a>
-            {{-- <a href="{{ route('item.show', $item->id) }}">
-            </a> --}}
             <div class="card-body">
                 {{-- イメージは必須にしていいる --}}
                 <h5 class="card-title">{{ $item->name }}</h5>

@@ -29,9 +29,16 @@ class ItemRequest extends FormRequest
             'price' => ['required', 'integer' , 'min:0'],
             'category' => ['required', 'exists:categories,id'],
             'image' => [
-                'required_with:id, null',
+                'required_without:id',
                 'image'
             ]
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'image.required_without' => '画像は必須です',
         ];
     }
 }

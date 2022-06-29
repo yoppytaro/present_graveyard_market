@@ -12,13 +12,16 @@
             <h1>{{ $title }}</h1>
         </div>
         @include('layouts.item_show')
-        <div>
-            <a href="{{ route('order.confirmation', $item) }}">購入</a>
+        <div class="mb-2">
+            <a class="text-decoration-none" href="{{ route('order.confirmation', $item) }}">
+                @component('components.button_danger')購入@endcomponent
+            </a>
         </div>
-        <div>
-            <a href="{{ route('item.edit', $item) }}">編集</a>
+        <div class="mb-2">
+            <a class="text-decoration-none" href="{{ route('item.edit', $item) }}">
+                @component('components.button_primary')編集@endcomponent
+            </a>
         </div>
-        @include('layouts.like_button')
     </div>
 @endsection
 

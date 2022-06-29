@@ -11,18 +11,11 @@
         <div>
             <h1>{{ $title }}</h1>
         </div>
+        @include('layouts.item_show')
         <div>
-            名前：{{ $item->name }}
-            説明：{{ $item->description }}
-            価格：{{ $item->price }}
-            カテゴリー：{{ $item->category }}
-            {{-- イメージは必須にしていいる --}}
-            <a href="{{ route('item.show', $item) }}">
-                <img src="{{ Storage::url($item->image) }}" style="height: 100px" >
+            <a class="text-decoration-none" href="{{ route('top') }}">
+                @component('components.button_danger')トップページ@endcomponent
             </a>
-        </div>
-        <div>
-            <a href="{{ route('top') }}">トップページ</a>
         </div>
     </div>
 @endsection

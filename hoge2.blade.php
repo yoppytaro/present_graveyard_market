@@ -1,6 +1,6 @@
-<header class="mb-3">
+<header>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="{{ route('top') }}">{{ config('app.name') }}</a>
+        <a href="{{ route('top') }}">{{ config('app.name') }}</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -9,33 +9,30 @@
             <ul class="navbar-nav mr-auto">
                 @auth
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('likes') }}">お気に入り</a>
+                        <a href="{{ route('likes') }}">お気に入り一覧</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('orders') }}">注文履歴</a>
+                        <a href="{{ route('user.show', Auth::user()) }}">プロフィール</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('user.show', Auth::user()) }}">プロフィール</a>
+                        <a href="{{ route('item.create') }}">新規出品</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('item.create') }}">新規出品</a>
+                        <form action="{{ route('logout') }}" method="POST">
+                            @csrf
+                            <input type="submit" value="ログアウト">
+                        </form>
                     </li>
                 @endauth
                 @guest
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('login') }}">ログイン</a>
+                        <a href="{{ route('login') }}">ログイン</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('register') }}">サインイン</a>
+                        <a href="{{ route('register') }}">サインイン</a>
                     </li>
                 @endguest
             </ul>
-            @auth
-                <form class="form-inline my-2 my-lg-0" action="{{ route('logout') }}" method="POST">
-                    @csrf
-                    <button type="submit" class="btn btn-outline-danger">ログアウト</button>
-                </form>
-            @endauth
         </div>
-      </nav>
+    </nav>
 </header>

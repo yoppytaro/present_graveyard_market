@@ -5,7 +5,12 @@ $(function() {
         if ($('.item').length) {
             paginathing();
         }
-    })
+        bsCustomFileInput.init()
+    });
+
+    $('#image').on('change', function() {
+        
+    });
 
     /* お気に入り */
     $(document).on('click', '.like_action', async function() {
@@ -42,7 +47,8 @@ $(function() {
     /* 商品検索 */
     $('#serch').on('click',async function() {
         $('.flash_message').empty();
-
+        $('.is_not_data').remove();
+        
         item_name = $('#serch_name').val()
         category = Number($('#category').val());
 
@@ -67,7 +73,7 @@ $(function() {
         // データなし
         if (!resultJson.length) {
             $('.items').before(`
-                <h3 class="mt-5 mb-5 text-center">
+                <h3 class="is_not_data mt-5 mb-5 text-center">
                     データなし！！
                 </h3>
             `);
@@ -80,7 +86,7 @@ $(function() {
             appendHtml = `
             <div class="p-2">
                 <div class='item card'>
-                    <a href="/item/${item.id}">
+                    <a class="text-decoration-none" href="/item/${item.id}">
                         <img class="card-img-top" src="/storage/${item.image.split('/')[1]}">
                     </a>
                     <div class="card-body">
@@ -120,12 +126,12 @@ $(function() {
     function flashMessage(messageType, messages) {
         if (messageType === 'success') {
             for(let message of messages) {
-                $('.flash_message').append(`<div class='container text-success'>${message}</div>`);
+                $('.flash_message').append(`<div class="alert alert-success" role="alert">${message}</div>`);
             }
             return
         }
         for(let message of messages) {
-            $('.flash_message').append(`<div class='container text-danger'>${message}</div>`);
+            $('.flash_message').append(`<div class="alert alert-danger" role="alert">${message}</div>`);
         }
     }
 

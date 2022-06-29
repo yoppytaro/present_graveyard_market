@@ -2,49 +2,51 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\User;
+use App\Item;
+use App\Services\UserServices;
 use App\Http\Requests\UserRequest;
 
-use App\User;
-use App\Services\UpImageServices;
 
 use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
-
-    // アクセス制限
     public function __construct()
     {
+        // アクセス制限
         $this->middleware('auth');
+        $this->userServices = new UserServices;
     }
 
     // ユーザー詳細
     public function show(User $user)
     {
-        return view('users.show', [
-            'title' => "{$user->name}さんのプロフィール",
-            'user' => $user,
-            'items' => $user->items
-        ]);
+        $title = "{$user->name}さんのプロフィール";
+        $items = Item::WhereItem($user->id, null)
+            ->JoinCategory()
+            ->IsLIkeBy($user->id)
+            ->get();
+
+        return view('users.show', compact('title', 'user', 'items'));
     }
 
     // ユーザー変更
     public function edit()
     {
-        return view('users.edit', [
-            'title' => 'プロフィール編集',
-        ]);
+        $title = 'プロフィール編集';
+
+        return view('users.edit', compact('title'));
     }
 
     // プロフィール更新
-    public function update(UserRequest $request,UpImageServices $UpImage, User $user)
+    public function update(User $user, UserRequest $request)
     {
-        $user->update([
-            'name' => $request->name,
-            'profile' => $request->profile,
-            'image' => $UpImage->UpImage($request->image, $user->image)
-        ]);
+        $this->userServices
+            ->update($user, $request);
+
+        session()->flash('success', 'プロフィールを更新しました');
+
         return redirect()->route('user.show', $user);
     }
 
@@ -52,16 +54,19 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         Auth::logout();
-        $user->delete();
+        
+        $this->userServices
+            ->delete($user);
+
         return redirect()->route('top');
     }
 
     // 購入した商品一覧
     public function orders()
     {
-        return view('users.orders', [
-            'title' => '購入した商品',
-            'items' => Auth::user()->orders
-        ]);
+        $title = '購入した商品';
+        $items = Auth::user()->orders;
+
+        return view('users.orders', compact('title','items'));
     }
 }

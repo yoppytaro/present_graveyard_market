@@ -2,38 +2,35 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+
 use Illuminate\Support\Facades\Auth;
 
 use App\Like;
-use App\Item;
+use App\Services\LikeServices;
+use App\Http\Requests\LikeRequest;
 
 class LikeController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth');
+        $this->likeServices = new LikeServices;
     }
 
     // お気に入り一覧
     public function index()
     {
-        return view('likes.index', [
-            'title' => 'お気に入り一覧',
-            'items' => Auth::user()->likeItems
-        ]);
+        $title = 'お気に入り一覧';
+        $items = Like::likeLIst(Auth::user()->id);
+
+        return view('likes.index', compact('title', 'items'));
     }
 
-    public function isLike(Request $request)
+    public function isLike(LikeRequest $request)
     {
-        $item = Item::find($request->id);
-        if ($item->isLiked(Auth::user()->id)) {
-            $item->likes->where('user_id', Auth::user()->id)->first()->delete();
-        } else {
-            Like::create([
-                'user_id' => Auth::user()->id,
-                'item_id' => $item->id,
-            ]);
-        }
+        $result = $this->likeServices
+            ->isLike($request);
+
+        return response()->json($result);
     }
 }

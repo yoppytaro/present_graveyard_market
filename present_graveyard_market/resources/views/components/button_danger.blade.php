@@ -1,0 +1,1 @@
+<button type="submit" class="btn btn-danger btn-lg btn-block">{{ $slot }}</button>

@@ -8,24 +8,32 @@
 
     {{-- css --}}
     {{-- <link rel="stylesheet" href="{{ asset('css/reset.css') }}"> --}}
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/pagination.css') }}">
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
 
     {{-- JS --}}
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="{{ asset('js/app.js') }}"></script>
+    <!-- paginathing.js -->
+    {{-- https://github.com/alfrcr/paginathing --}}
+    <script src="{{ asset('js/paginathing.min.js') }}"></script>
+    {{-- bsCustomFileInput --}}
+    <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
     <script src="{{ asset('js/main.js') }}" charset="UTF-8"></script>
 </head>
-<body>
+<body class="bg-white">
     @yield('header')
 
-    @if(\Session::has('success'))
-        <div class="success">{{\Session::get('success')}}</div>
-    @endif
-    <ul>
+    <div class="flash_message container">
+        @if(\Session::has('success'))
+            @component('components.alert_info'){{\Session::get('success')}}@endcomponent
+        @endif
         @foreach ($errors->all() as $error)
-            <li>{{$error}}</li>
+            @component('components.alert_error'){{$error}}@endcomponent
         @endforeach
-    </ul>
+    </div>
 
+    
     @yield('main')
 </body>
 </html>

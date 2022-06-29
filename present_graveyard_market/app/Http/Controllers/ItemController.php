@@ -3,84 +3,94 @@
 namespace App\Http\Controllers;
 
 use App\Item;
-use App\Like;
-use App\Http\Requests\ItemRequest;
-use App\Services\UpImageServices;
+use App\Category;
 use Illuminate\Support\Facades\Auth;
+use App\Services\ItemServices;
+use App\Http\Requests\ItemRequest;
 
 class ItemController extends Controller
 {
-
-    // アクセス制限
     public function __construct()
     {
+        // アクセス制限
         $this->middleware('auth');
+        $this->itemServices = new ItemServices;
     }
 
+    // トップページ
     public function index()
     {
-        return view('items.index', [
-            'title' => config('app.name'),
-            'items' => Item::all()
-        ]);
+        $title = config('app.name');
+        $items = Item::joinCategory()
+            ->isLikeBy(Auth::user()->id)
+            ->orderBy('items.id', 'desc')
+            ->get();
+        $categories = Category::all();
+
+        return view('items.index', compact('title', 'items', 'categories'));
     }
 
+    // アイテム作成
     public function create()
     {
-        return view('items.create', [
-            'title' => '商品登録',
-        ]);
+        $title = '商品登録';
+        $categories = Category::all();
+        $item = new Item;
+
+        return view('items.create', compact('title', 'categories', 'item'));
     }
 
-
-    public function store(ItemRequest $request, UpImageServices $UpImage)
+    //　アイテム登録
+    public function store(ItemRequest $request)
     {
-        Item::create([
-            'user_id' => Auth::user()->id,
-            'name' => $request->name,
-            'description' => $request->description,
-            'price' => $request->price,
-            'category_id' => $request->category,
-            'image' => $UpImage->UpImage($request->image,''),
-        ]);
+        $item = new Item;
+        $this->itemServices
+            ->upsert($item, $request);
+
+        session()->flash('success', '商品登録しました');
 
         return redirect()->route('top');
     }
 
+    // 商品詳細
     public function show(Item $item)
     {
-        return view('items.show', [
-            'title' => '商品詳細',
-            'item' => $item
-        ]);
+        $title = '商品詳細';
+        $item = $item->whereItem(null, $item->id)
+            ->joinCategory()
+            ->isLIkeBy(Auth::user()->id)
+            ->first();
+
+        return view('items.show', compact('title', 'item'));
     }
 
-
+    // 商品編集
     public function edit(Item $item)
     {
-        return view('items.edit', [
-            'title' => '商品編集',
-            'item' => $item
-        ]);
-    }
+        $title = '商品編集';
+        $categories = Category::all();
 
-    public function update(ItemRequest $request, UpImageServices $UpImage, Item $item)
+        return view('items.edit', compact('title', 'item', 'categories'));
+    }
+    
+    // 商品更新
+    public function update(Item $item, ItemRequest $request)
     {
-        $item->update([
-            'user_id' => Auth::user()->id,
-            'name' => $request->name,
-            'description' => $request->description,
-            'price' => $request->price,
-            'category_id' => $request->category,
-            'image' => $UpImage->UpImage($request->image,''),
-        ]);
+        $this->itemServices
+            ->upsert($item, $request);
+
+        session()->flash('success', '商品を更新しました');
 
         return redirect()->route('item.show', $item);
     }
 
+    // 商品削除
     public function destroy(Item $item)
     {
-        $item->delete();
+        $this->itemServices->delete($item);
+
+        session()->flash('success', '商品を削除しました');
+
         return redirect()->route('top');
     }
 }
